@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>webs3: {{ view.getf_html if view.getf_html else 'Simple S3 Web Viewer' }}</title>
+  <meta name="apple-mobile-web-app-title" content="webs3: {{ view.getf_html if view.getf_html else 'Simple S3 Web Viewer' }}">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <meta name="apple-mobile-web-app-capable" content="yes" /> 
+  <style>
+    body { margin: 0; padding: 0; }
+    p { margin:0 0 5px; padding:0; }
+    .webs3 { font: 14px sans-serif; }
+    .webs3-h2 { font-family: sans-serif; margin: 0; padding: 8px 16px; background: #ddd; border-bottom: 1px solid #bbb; }
+    .webs3-h2 a { color:#000; text-decoration: none; }
+    .webs3-h2 a.hide { font-size: 12px; font-weight: bold; position: relative; top: -2px; }
+    .webs3-h2 a.hide:hover { text-decoration: none; }
+    .webs3-h2 small { font-size:10px; font-weight:normal; font-family:monospace; position:relative; top:-2px; }
+    .webs3 a { color: #000; text-decoration: none; }
+    .webs3 a:hover { text-decoration: underline; }
+    .webs3 a.dotfiles { color:#777; }
+    .address { font-family: monospace; padding: 8px 16px; border-bottom: 1px solid #aaa; background: #eee; }
+    .address a { text-decoration: underline; }
+    .address span { color:#777; }
+    .address a:last-child { font-weight: bold; }
+    .address a.undhover { text-decoration: none; }
+    .address a.undhover:hover { text-decoration: underline; }
+    .address p { margin:0;padding:0; line-height:1.75; }
+    .address .totals { padding-top:2px; }
+    .bold { font-weight: bold; }
+    .error { color: #555; font-family: monospace; padding: 4px 0; }
+    .noncsv-plain { margin: 0; padding: 4px 0; }
+    .hide-on-hide { {% if not view.show_header %} display:none; {% endif %} }
+    .hr-btm { border-bottom: 1px solid #ccc; margin-bottom:5px; }
+    .page-nav { border-top:1px solid #ccc; margin-top:5px; padding-top:5px; }
+    .fade { color:#777; }
+    .dir-list { padding: 8px 16px; font-family: monospace; font-size: 14px; }
+    .dir-list .error { padding: 4px 0; }
+    .dir-item { padding: 4px 0; }
+    .file-show { padding:16px; }
+    .file-show .error { margin-top: -4px; }
+    .foot { height:20px; }
+    .top-filter { margin:-5px 0 8px; }
+    .csv-table { border-collapse: collapse; font-size:13px; }
+    .csv-table th, .csv-table td { border: 1px solid #ccc; padding: 8px; font-weight: normal; }
+    .csv-table th { background: linear-gradient(#f9f9f9 0% 50%, #f2f2f2 50% 100%); }
+    .csv-table td { }
+    .inline-video { max-width: 100%; height: auto; }
+    .inline-image { max-width: 100%; height: auto; }
+    .inline-frame { max-width: 100%; height: auto; min-width:80%; min-height:500px; border: 1px solid #ccc; }
+  {% if view.markdown_css %}
+    /* Markdown CSS from: https://sindresorhus.com/github-markdown-css/github-markdown.css */
+    .show-markdown { min-width: 200px; max-width: 830px; margin: 20px auto 40px; padding:8px 32px 16px; border:1px solid #ddd; }
+    {{ view.markdown_css }}
+  {% elif view.rst_css %}
+    /* RST Styling (via Markdown) CSS from: https://sindresorhus.com/github-markdown-css/github-markdown.css */
+    .markdown-body table { border-width: 0; }
+    .show-rst { min-width: 200px; max-width: 830px; margin: 20px auto 40px; padding:8px 32px 16px; border:1px solid #ddd; }
+    {{ view.rst_css }}
+  {% endif %}
+  </style>
+</head>
+<body>
+
+  {% if view.show_header %}
+  <div class="webs3">
+    <h2 class="webs3-h2">
+      <a href="{{ view.app_path }}?f=/">webs3</a>
+      <a class="hide" href="?f={{ view.getf_html_sp }}{{ view.getshow_query }}{{ view.getsort_query }}{{ view.getfilter_query }}&amp;hide=true">&#10548;</a>
+      {% if not view.dirlist %}
+        {% if view.show_plain %}
+          <small>[<a href="?f={{ view.getf_html_sp }}">x</a>]</small>
+        {% else %}
+          <small>[<a href="?f={{ view.getf_html_sp }}&amp;show=plain">plain</a>]</small>
+        {% endif %}
+        <small>[sort 
+          <a href="?f={{ view.getf_html_sp }}{{ view.getshow_query }}{{ view.getfilter_query }}" class="{{ 'bold' if not view.getsort else '' }}">a-z</a> 
+          <a href="?f={{ view.getf_html_sp }}{{ view.getshow_query }}{{ view.getfilter_query }}&amp;sort=za" class="{{ 'bold' if view.getsort == 'za' else '' }}">z-a</a>]
+        </small>
+      {% endif %}
+      <small>[<a href="?session=show">session</a>]</small>
+    </h2>
+  </div>
+
+  <div class="webs3 address">
+    <p>
+      <b><a href="{{ view.app_path }}?f=/" class="undhover">Amazon S3:</a></b> <i class="fade shorten" title="{{ view.aws_access }}@s3.amazonaws.com">{{ view.aws_access }}@s3.amazonaws.com</i> 
+      {% for a in view.address %} <span>{{ a.separator }}</span> <a href="?f={{ a.path }}">{{ a.name }}</a>{% endfor %}
+    </p>
+    {% if view.total['text'] %}
+      <div class="totals">{{ view.total['text'] }}: {{ view.total['count'] }}</div>
+    {% endif %}
+  </div>
+  {% endif %}
+
+  {% if view.listfs %}
+  <div class="webs3 dir-list">
+
+    {% for f in view.listfs %}
+      <div class="dir-item"><a href="?f={{ f.path }}" class="{% if f.name.startswith('.') %}dotfiles{% endif %}">{{ f.name }}</a></div>
+    {% endfor %}
+
+    <div class="page-nav">
+      {% if view.nav_prev %}
+        &larr; <a href="{{ view.nav_prev }}">Back</a> 
+      {% endif %}
+      {% if view.nav_prev and view.nav_next %} &middot; {% endif %}
+      {% if view.nav_next %}
+        <a href="{{ view.nav_next }}">Next</a> &rarr;
+      {% endif %}
+    </div>
+
+  </div>
+
+  {% endif %}
+
+  {% if view.session_data %}
+    <div class="webs3 dir-list session-data">
+      <small>session data: [<a href="?session=show">reload</a>] [<a href="?session=clear">clear</a>]</small>
+      <pre class="noncsv-plain">{{ view.session_data }}</pre>
+    </div>
+  {% endif %}
+
+  {% if view.csvshow %}
+    <div class="webs3 file-show">
+      {{ view.csvshow | safe }}
+    </div>
+  {% endif %}
+
+  {% if view.noncsv %}
+    {% if view.noncsv_markdown %}
+      <div class="show-markdown">{{ view.noncsv_markdown | safe }}</div>
+    {% elif view.noncsv_rst %}
+      <div class="show-rst">{{ view.noncsv_rst | safe }}</div>
+    {% elif view.noncsv_html %}
+      <div class="show-html">{{ view.noncsv_html | safe }}</div>
+    {% else %}
+      <div class="webs3 dir-list">
+        {% if view.show_inline %}
+          <pre class="noncsv-plain"></pre>
+          {% if view.getf_html_sp.lower().endswith(
+              ('.mov', '.mp4', '.wmv', '.avi', '.mkv', '.webm', '.mp3','.m4a')
+            ) %}
+            <video controls class="inline-video" autoplay>
+              <source src="{{ view.inline_url }}">
+              Your browser does not support this video format.
+            </video>
+          {% elif view.getf_html_sp.lower().endswith(('.jpg', '.jpeg', '.png', '.gif', '.webp')) %}
+            <img class="inline-image" src="{{ view.inline_url }}">
+          {% else %}
+            <iframe class="inline-frame" src="{{ view.inline_url }}">
+          {% endif %}
+        {% else %}
+          <div class="error">
+            Multimedia file. 
+            <small>[<a href="?f={{ view.getf_html_sp }}&amp;show=inline">inline</a>]</small>
+            <small>[<a href="?f={{ view.getf_html_sp }}&amp;show=load">load</a>]</small>
+          </div>
+        {% endif %}
+      </div>
+    {% endif %}
+  {% endif %}
+
+  <div class="foot"></div>
+
+  <script type="text/javascript">
+    document.addEventListener("DOMContentLoaded", function() {
+      const shortens = document.querySelectorAll('.shorten');
+      shortens.forEach(el => {
+        const fullText = el.textContent.trim();
+        el.setAttribute('title', fullText);
+        if ( fullText.length > 10 ) {
+          const shortText = fullText.slice(0, 10) + '&hellip;';
+          el.innerHTML = shortText;
+          el.dataset.shortened = "true";
+        }
+        el.addEventListener('mouseup', () => {
+          const selection = window.getSelection().toString();
+          const isShort = el.dataset.shortened === "true";
+          if ( isShort ) {
+            el.textContent = el.title;
+            el.dataset.shortened = "false";
+          } else if ( !selection ) {
+            el.innerHTML = el.title.slice(0, 10) + '&hellip;';
+            el.dataset.shortened = "true";
+          }
+        });
+      });
+    });
+  </script>
+
+</body>
+</html>
