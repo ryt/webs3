@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# This app uses Flask & Gunicorn with ryt/runapp for deployment.
+# This app uses boto3, Flask, and Gunicorn.
 
 # Related Notes:
 # S3 Browser React+Vite Web App by AWS: 
@@ -9,8 +9,8 @@
 v = '0.0.1'
 
 """
-Copyright (C) 2024 Ray Mentose.
-Latest version of the project on Github at: https://github.com/ryt/webcsv
+Copyright (C) 2025 Ray Mentose.
+Latest version of the project on Github at: https://github.com/ryt/webs3
 """
 
 import os

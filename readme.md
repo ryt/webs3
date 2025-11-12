@@ -1,6 +1,6 @@
 # webs3: Simple S3 Web Viewer
 
-Derived from [webcsv](https://github.com/ryt/webcsv). Simple python web app to view s3 files on the browser. 
+Simple python web app to browse S3 on a web browser. Derived from [webcsv](https://github.com/ryt/webcsv). 
 
 This app uses [boto3](https://github.com/boto/boto3) for S3 connection, and [Flask](https://github.com/pallets/flask) & [Gunicorn](https://github.com/benoitc/gunicorn) (optionally with [ryt/runapp](https://github.com/ryt/runapp)) for deployment.
 
