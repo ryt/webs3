@@ -4,7 +4,7 @@ config = {
 
   # Set 'app_path' to a custom value to change the default path that will be used to route the index page of the app.
   # For example, if the value is "/webs3", the default url of the web app will be something like 
-  # "https://localhost:8002/webs3", rather than "https://localhost:8002/".
+  # "https://localhost:8003/webs3", rather than "https://localhost:8003/".
 
   'app_path'  : '/webs3',
 
@@ -19,7 +19,7 @@ config = {
 
   # Set 'secret_key' to set an app.secret_key for Flask.
 
-  'secret_key'  : 'FxGnX37fGzu20S4nFwJsOnP2f87RnFkMj',
+  'secret_key'  : 'SECRETKEYFORFLASK',
   
   # Set 'parse_html' to True to enable webs3 to parse & render html files. Please note that scripts and styles that are
   # included within the html code will be rendered and processed by the browser as well. Make sure the html files are
