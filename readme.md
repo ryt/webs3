@@ -93,6 +93,15 @@ $ pip3 install docutils
 
 2. Flask uses the port `5000` by default for it's development server. Make sure to access the app using that port whenever you're running the flask server.
 
+#### Similar Reccomendations
+
+**Great Complementary S3 Apps for Desktop, Mobile, and Web**
+
+- [Cyberduck](https://cyberduck.io/) by iterate GmbH
+- [Mountain Duck](https://mountainduck.io/) by iterate GmbH
+- [FileBrowserGO](https://www.stratospherix.com/filebrowsergo/) by Stratospherix
+- [Amplify S3 Browser](https://github.com/aws-samples/sample-amplify-storage-browser) React+Vite Web App by AWS
+
 --
 
 <sub>Copyright &copy; 2025 Ray Mentose.</sub>

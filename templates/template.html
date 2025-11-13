@@ -101,11 +101,13 @@
 
     <div class="page-nav">
       {% if view.nav_prev %}
-        &larr; <a href="{{ view.nav_prev }}">Back</a> 
+        <a href="{{ view.nav_prev }}">&larr;</a>
+        <a href="{{ view.nav_prev }}">Back</a> 
       {% endif %}
       {% if view.nav_prev and view.nav_next %} &middot; {% endif %}
       {% if view.nav_next %}
-        <a href="{{ view.nav_next }}">Next</a> &rarr;
+        <a href="{{ view.nav_next }}">Next</a>
+        <a href="{{ view.nav_next }}">&rarr;</a>
       {% endif %}
     </div>
 
