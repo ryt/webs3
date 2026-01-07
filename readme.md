@@ -95,14 +95,12 @@ $ pip3 install docutils
 
 #### Similar App Recommendations
 
-**Other Complementary S3 Apps for Desktop, Mobile, and Web**
+**Useful Free & Paid S3 Apps for Desktop, Mobile, and Web**
 
 - [Cyberduck](https://cyberduck.io/) by iterate GmbH
 - [Mountain Duck](https://mountainduck.io/) by iterate GmbH
 - [FileBrowserGO](https://www.stratospherix.com/filebrowsergo/) by Stratospherix
 - [Amplify S3 Browser](https://github.com/aws-samples/sample-amplify-storage-browser) React+Vite Web App by AWS
 
----
 
-<sub>Copyright &copy; 2025 Ray Mentose.</sub>
 
